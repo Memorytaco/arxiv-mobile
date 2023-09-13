@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "dev.dunor.app.arXiv";
+option java_multiple_files = true;
+
+message AppFontSettings {
+  int32 font_size = 16;
+}

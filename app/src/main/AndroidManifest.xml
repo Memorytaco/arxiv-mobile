@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dev.dunor.app.arXiv"
+    android:icon="@drawable/icon"
+    android:installLocation="auto">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="false" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <application
+        android:name=".MyApplication"
+        android:enableOnBackInvokedCallback="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security"
+        android:theme="@style/AppTheme">
+
+        <receiver
+            android:name=".ArxivAppWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/arxiv_appwidget_info" />
+        </receiver>
+
+        <activity android:name=".PrintDialogActivity" />
+
+        <activity
+            android:name=".EditPreferences"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name=".SearchWindow"
+            android:configChanges="keyboardHidden|orientation" />
+
+        <activity
+            android:name=".SubarXiv"
+            android:configChanges="keyboardHidden|orientation"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".AppMain"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ArxivMain"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:hardwareAccelerated="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="arxiv.org" />
+                <data android:scheme="http" />
+                <data android:host="arxiv.org" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
