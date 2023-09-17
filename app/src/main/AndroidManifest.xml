@@ -46,26 +46,22 @@
         <activity android:name=".PrintDialogActivity" />
 
         <activity
-            android:name=".EditPreferences"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name=".SearchWindow"
-            android:configChanges="keyboardHidden|orientation" />
-
-        <activity
             android:name=".SubarXiv"
             android:configChanges="keyboardHidden|orientation"
             android:hardwareAccelerated="true" />
+
         <activity
-            android:name=".AppMain"
+            android:name=".activity.AppMain"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.ArxivPreferenceActivity" />
+
         <activity
             android:name=".ArxivMain"
             android:configChanges="keyboardHidden|orientation"

@@ -1,4 +1,4 @@
-package dev.dunor.app.arXiv
+package dev.dunor.app.arXiv.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao

@@ -1,30 +1,22 @@
-package dev.dunor.app.arXiv
+package dev.dunor.app.arXiv.page.arxiv
 
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.DateRange
@@ -32,18 +24,11 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonElevation
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
@@ -61,115 +46,16 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import dev.dunor.app.arXiv.repository.ArxivRepository
+import dev.dunor.app.arXiv.util.ArxivAtomEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Composable
-fun ArxivComponent(modifier: Modifier = Modifier) {
-
-  val navController = rememberNavController()
-
-  Surface(color = MaterialTheme.colorScheme.secondaryContainer) {
-    NavHost(navController = navController, "category", modifier.fillMaxHeight()) {
-      composable("category") { ArxivCategoryComponent(navController = navController) }
-      composable("category_detail/{main}/{subcategory}", arguments = listOf(
-        navArgument("main") {
-          type = NavType.EnumType(ArxivRepository.ArxivCategory::class.java)
-        },
-        navArgument("subcategory") { type = NavType.StringType }
-      )) {
-        ArxivCategoryDetail(
-          navController = navController,
-          it.arguments!!.getSerializable("main", ArxivRepository.ArxivCategory::class.java)!!,
-          it.arguments!!.getString("subcategory")!!
-        )
-      }
-      composable("article") {}
-    }
-  }
-}
-
-
-// used to display a list of categories for arxiv
-@Composable
-fun ArxivCategoryComponent(navController: NavController) {
-  val repository by remember { mutableStateOf(ArxivRepository()) }
-
-  @Composable
-  fun EntryCategory(category: ArxivRepository.ArxivCategory, expand: Boolean) {
-    var localExpand by remember {
-      mutableStateOf(expand)
-    }
-    Column {
-
-      // header, used to show main category and an indicator button
-      Row(
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-          .clickable {
-            localExpand = !localExpand
-          }
-          .fillMaxWidth()) {
-        Text(
-          text = category.category,
-          modifier = Modifier
-            .weight(9.0F)
-            .padding(start = 5.dp),
-          color = MaterialTheme.colorScheme.onSecondaryContainer,
-          style = MaterialTheme.typography.headlineMedium,
-        )
-        Icon(
-          if (localExpand) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-          null,
-          modifier = Modifier
-            .padding(10.dp, 0.dp)
-            .weight(1.0F),
-          tint = MaterialTheme.colorScheme.onSecondaryContainer
-        )
-
-      }
-
-      AnimatedVisibility(visible = localExpand) {
-        Column {
-          repository.getSubCategories(category).forEach {
-            Column(modifier = Modifier
-              .clickable {
-                navController.navigate("category_detail/${category}/${it.category}")
-              }
-              .padding(bottom = 10.dp)) {
-              Text(text = it.category, style = MaterialTheme.typography.headlineSmall)
-              if (it.description != null) Text(text = it.description)
-            }
-          }
-        }
-      }
-
-    }
-  }
-
-  // Views
-  Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-    repository.mainCategories.forEach {
-      EntryCategory(category = it, false)
-    }
-  }
-
-}
 
 // start a search on a specific category
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArxivCategoryDetail(
-  navController: NavController,
   mainCategory: ArxivRepository.ArxivCategory,
   subCategory: String
 ) {
@@ -294,11 +180,11 @@ fun ArxivCategoryDetail(
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
               .padding(vertical = 3.dp)
               .fillMaxWidth()) {
-              Row(modifier = Modifier.weight(1.0F)) {
+              Row(modifier = Modifier.weight(1.0F), horizontalArrangement = Arrangement.End) {
                 Icon(Icons.Rounded.Create, "published date icon", modifier = Modifier.padding(end = 3.dp))
                 Text(text = SimpleDateFormat.getDateInstance().format(it.published))
               }
-              Row(modifier = Modifier.weight(1.0F)) {
+              Row(modifier = Modifier.weight(1.0F), horizontalArrangement = Arrangement.End) {
                 Icon(Icons.Rounded.DateRange, "last updated date icon", modifier = Modifier.padding(end = 3.dp))
                 Text(text = SimpleDateFormat.getDateInstance().format(it.updated))
               }
@@ -311,10 +197,12 @@ fun ArxivCategoryDetail(
             ) {
               LazyRow(content = {
                 items(it.authors) {
-                    Icon(Icons.Rounded.Person, "author icon")
-                    Text(text = it)
+                  Icon(Icons.Rounded.Person, "author icon")
+                  Text(text = it)
                 }
-              }, modifier = Modifier.padding(10.dp).fillMaxWidth(), horizontalArrangement = Arrangement.End)
+              }, modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(), horizontalArrangement = Arrangement.End)
             }
 
             // available resource button
@@ -361,9 +249,8 @@ fun ArxivCategoryDetail(
   }
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(showBackground = true)
 @Composable
-fun ArxivComponentPreview() {
-  ArxivComponent()
+@Preview(showBackground = true)
+fun ShowArxivCategoryDetail() {
+  ArxivCategoryDetail(ArxivRepository.ArxivCategory.ComputerScience, "Formal Languages and Automata Theory")
 }

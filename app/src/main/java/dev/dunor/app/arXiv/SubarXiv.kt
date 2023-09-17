@@ -22,7 +22,9 @@ import android.widget.ListView
 import android.widget.RemoteViews
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import dev.dunor.app.arXiv.persistent.ArxivPrivateStorage
 import org.xml.sax.InputSource
 import java.lang.reflect.Method
 import java.net.URL
@@ -66,7 +68,7 @@ class SubArxivIntent<T>: Intent {
 
 }
 
-class SubarXiv : AppCompatActivity(), OnItemClickListener {
+class SubarXiv : ComponentActivity(), OnItemClickListener {
     private var thisActivity: Context? = null
 
     //UI-Views
@@ -88,13 +90,14 @@ class SubarXiv : AppCompatActivity(), OnItemClickListener {
         }
         val database = ArxivPrivateStorage(this)
         if (mySourcePref == 0) {
-            var tempquery = "search_query=cat:" + urls!![info.position]
+            var tempquery = "search_query=cat:" + urls[info.position]
             if (info.position == 0) {
                 tempquery = "$tempquery*"
             }
             val tempurl = ("http://export.arxiv.org/api/query?" + tempquery
                     + "&sortBy=submittedDate&sortOrder=ascending")
-            database.insertFeed(shortItems!![info.position],
+            database.insertFeed(
+                shortItems[info.position],
                     tempquery, tempurl, -1, -1)
             val t9: Thread = object : Thread() {
                 override fun run() {
@@ -103,8 +106,8 @@ class SubarXiv : AppCompatActivity(), OnItemClickListener {
             }
             t9.start()
         } else {
-            val tempquery = urls!![info.position]
-            database.insertFeed(shortItems!![info.position] + " (RSS)", shortItems!![info.position], tempquery, -2, -2)
+            val tempquery = urls[info.position]
+            database.insertFeed(shortItems[info.position] + " (RSS)", shortItems[info.position], tempquery, -2, -2)
             Toast.makeText(this, R.string.added_to_favorites_rss,
                     Toast.LENGTH_SHORT).show()
         }
@@ -173,18 +176,16 @@ class SubarXiv : AppCompatActivity(), OnItemClickListener {
         val favorites = database.feeds
         database.close()
         var favText = ""
-        if (favorites!!.size > 0) {
+        if (favorites.isNotEmpty()) {
             try {
                 mRemoveAllViews = RemoteViews::class.java.getMethod("removeAllViews",
                         *mRemoveAllViewsSignature)
                 mRemoveAllViewsArgs[0] = Integer.valueOf(R.id.mainlayout)
                 mRemoveAllViews!!.invoke(views, *mRemoveAllViewsArgs)
-
-                //views.removeAllViews(R.id.mainlayout);
             } catch (ef: Exception) {
             }
             for (feed in favorites) {
-                if (feed.url!!.contains("query")) {
+                if (feed.url.contains("query")) {
                     val urlAddressTemp = ("http://export.arxiv.org/api/query?" + feed.shortTitle
                             + "&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=1")
                     var numberOfTotalResults = 0

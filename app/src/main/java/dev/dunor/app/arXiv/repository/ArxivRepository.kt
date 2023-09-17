@@ -1,5 +1,7 @@
-package dev.dunor.app.arXiv
+package dev.dunor.app.arXiv.repository
 
+import dev.dunor.app.arXiv.util.ArxivAtomEntry
+import dev.dunor.app.arXiv.util.ArxivAtomSearchParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
@@ -334,7 +336,3 @@ class ArxivRepository {
   data class ArxivCategoryData(val category: String, val code: String, val description: String?)
 
 }
-
-
-
-

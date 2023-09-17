@@ -30,6 +30,7 @@ import android.net.Uri
 import android.os.SystemClock
 import android.util.Log
 import android.widget.RemoteViews
+import dev.dunor.app.arXiv.persistent.ArxivPrivateStorage
 import org.xml.sax.InputSource
 import java.lang.reflect.Method
 import java.net.URL

@@ -1,4 +1,4 @@
-package dev.dunor.app.arXiv
+package dev.dunor.app.arXiv.util
 
 import android.annotation.SuppressLint
 import android.util.Xml

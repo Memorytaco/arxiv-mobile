@@ -1,9 +1,18 @@
-package dev.dunor.app.arXiv
+package dev.dunor.app.arXiv.persistent
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import dev.dunor.app.arXiv.data.Feed
+import dev.dunor.app.arXiv.data.FeedData
+import dev.dunor.app.arXiv.data.FeedID
+import dev.dunor.app.arXiv.data.History
+import dev.dunor.app.arXiv.data.HistoryData
+import dev.dunor.app.arXiv.data.HistoryID
+import dev.dunor.app.arXiv.data.OperateFeed
+import dev.dunor.app.arXiv.data.OperateHistory
+import dev.dunor.app.arXiv.data.appFontSettingsDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

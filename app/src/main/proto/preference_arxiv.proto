@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "dev.dunor.app.arXiv";
+option java_multiple_files = true;
+
+message PreferenceArxiv {
+  bool use_api = 1;
+}

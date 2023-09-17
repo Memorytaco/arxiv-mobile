@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="preference_arxiv_desc_article_source">
+        The \'arXiv API\' option is recommended. The RSS source does not support the widget and only shows the most recent days articles.
+    </string>
+</resources>

@@ -38,6 +38,7 @@ import android.widget.TabWidget
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import dev.dunor.app.arXiv.persistent.ArxivPrivateStorage
 import org.xml.sax.InputSource
 import java.io.File
 import java.lang.reflect.Method
@@ -284,7 +285,7 @@ class ArxivMain : AppCompatActivity(), OnItemClickListener {
             }
 
             PREF_ID -> {
-                startActivity(Intent(this@ArxivMain, EditPreferences::class.java))
+//                startActivity(Intent(this@ArxivMain, EditPreferences::class.java))
                 return true
             }
 
@@ -715,8 +716,8 @@ class ArxivMain : AppCompatActivity(), OnItemClickListener {
     }
 
     fun searchPressed(buttoncover: View?) {
-        val myIntent = Intent(this, SearchWindow::class.java)
-        startActivity(myIntent)
+//        val myIntent = Intent(this, SearchWindow::class.java)
+//        startActivity(myIntent)
     }
 
     fun updateFavList() {
